@@ -46,36 +46,6 @@ export default function prepareAssets() {
 
 // out of the box fonts
 const fonts = {
-  'Gulim': {
-    correction(size, lineHeight) {
-      return (size * lineHeight - size) / 2;
-    },
-  },
-  'GulimChe': {
-    correction(size, lineHeight) {
-      return (size * lineHeight - size) / 2;
-    },
-  },
-  'Batang': {
-    correction(size, lineHeight) {
-      return (size * lineHeight - size) / 2;
-    },
-  },
-  'BatangChe': {
-    correction(size, lineHeight) {
-      return (size * lineHeight - size) / 2;
-    },
-  },
-  'Dotum': {
-    correction(size, lineHeight) {
-      return (size * lineHeight - size) / 2;
-    },
-  },
-  'DotumChe': {
-    correction(size, lineHeight) {
-      return (size * lineHeight - size) / 2;
-    },
-  },  
   Courier: {
     correction(size, lineHeight) {
       return (size * lineHeight - size) / 2 + size / 6;
@@ -95,6 +65,12 @@ const fonts = {
 // Available fonts
 export const Fonts = {
   ...fonts,
+  'NanumGothic': {
+    src: '/NanumGothic.ttf', // 9.9 MB
+    correction(size, lineHeight) {
+      return (size * lineHeight - size) / 2;
+    },
+  },
 };
 
 export function fetchFont(name) {

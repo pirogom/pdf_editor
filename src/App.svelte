@@ -22,7 +22,7 @@
   let pages = [];
   let pagesScale = [];
   let allObjects = [];
-  let currentFont = "Gulim";
+  let currentFont = "NanumGothic";
   let focusId = null;
   let selectedPageIndex = -1;
   let saving = false;
