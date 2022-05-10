@@ -27,8 +27,8 @@
   let selectedPageIndex = -1;
   let saving = false;
   let addingDrawing = false;
-  let squareMasking = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAC9JREFUWEft0EERAAAMwjDwL3qTwSdV0EuTXIbVAAECBAgQIECAAAECBAgQILAWeLAnIAG6gLhJAAAAAElFTkSuQmCC"
-  let circleMasking = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAA7lJREFUeF7lm0uoTlEUx3+Xq5DnhCQh8iwGFHkUAwa4SCEGhgYGdD0m5iZekWRgKAl5SyF5RCkMkNdF3mSESMRF/9vZ+u7X/r7zPuc7Z6/p2Xs9/nvvtddaZ+0msqERwBxgMjAWGAIMBLoBTcBf4BfwEXgDPAJuAxeB52mqKOFpUBdgJrAJmOcZGVWOwDkHbAWuA3+iMrLNSxoAreweYFGSSlbxOgWsA14lISMpAAYBJ4ApSSgVkMdNYAnwIeB467C4APQCDgEL4igRc+5ZYAXwLQqfOAAsBQ7HPN9RdLbNkZ9YDhwNyzAKAHJwp4H5YYVlMF67Qf4nsKMMC8AA4BnQOwNjoorQUZAz/hyEQRgAZgDXGmTL+9mmHTAVuOU3MCgAa4Hdfswa8PtqYH89vYIAMA240YDGBVVJAZkCqEjX4HAvFA0CVFCFsh6nG0I+4V3YSLA78BVozlrjFOT9BPoBP6p511vZJ8CoFJTJi2UbMDooABuBbXlpmqJcJWfbK/nbdkBPL6ws8rmvhaH8gcL372aAzUhFeS0prkLerM8AC2sBIG/5Om8NM5A/zKTT1TvgLjAhAwXyFnHHq051lKMMjQMe5K1ZhvJHKsapBEBnI8+8PkPbO0Qpc2wxACjF/V2QRCcpoHQjNBsAih7vRwVlugHgmFdfi8qoqPOOGwC0/bsW1YoYercLgMHA2xhMCj1VAKi4eaTQVsRQXgBsATbH4FHoqQKg7LF/3QUSAIr+FAU6SQJAqWEPJ633Ir92QJGgk2T+zTtpvIwWAM7vAOd9wFNAubGTpCNwHpjrpPWeD1CZeIPLAKwEDroMgPPZoBbf6XqAAHC+IuR8TdD5qrCOwQWvn9eVC6HTfwEZrV4A9QS4QuoVaHP13+A9YKLJBitXfCjw0oEtUPPvsGy/DMwqMQhXgNnGPluDhJqJPpUYgP6VXaS12mDKmiDtANT/9J/q9QG9B/QOoCykzhf5uE5UD4A+3lEoQ8FUvcN9bW8K/DrByhIbdNz5tq3sB4Dm6LWXosSikqpden1mpSAAaOIaYG8BEUikW9zYrbvzUkHaaNT+In2v+i1a0B1g+Kh69MJ78OjHO6/veoCpLndrd3iYW6CWAeoi16vO8XlZWEfuQ2CSrSs8rg+wzW+0YGkX0Bp2UcIegWr+aq1VXp1nd6kyO/U36s1xaIoLgBE4xntDmCUQ94FlwOPQVldMSAoAw1Kh5k5gcUq/3BXRnQTWN9rbYdsiaFcofljlhaFRF+oLcADYB8jJJUr/AI4ai/zkj+trAAAAAElFTkSuQmCC"
+  let blackSquareMasking = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAC9JREFUWEft0EERAAAMwjDwL3qTwSdV0EuTXIbVAAECBAgQIECAAAECBAgQILAWeLAnIAG6gLhJAAAAAElFTkSuQmCC"
+  let whiteSquareMasking = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAADdJREFUWEft1zERADAMA7GEQcsf7BdGFxnBnzZv1fzbXQEECBAgQIAAAQIECBAgQIBAdf6985kHWIiAwcMwtjwAAAAASUVORK5CYII="
   // for test purpose
   onMount(async () => {
     try {
@@ -131,11 +131,11 @@
     }
   }
 
-  function onAddSquareBox(){
-    addUrlImage(squareMasking, "squre.png")
+  function onAddBlackSquareBox(){
+    addUrlImage(blackSquareMasking, "squre.png")
   }
-  function onAddCircleBox(){
-    addUrlImage(circleMasking, "circle.png")
+  function onAddWhiteSquareBox(){
+    addUrlImage(whiteSquareMasking, "circle.png")
   }
 
   function onAddTextField() {
@@ -143,7 +143,7 @@
       addTextField();
     }
   }
-  function addTextField(text = "New Text Field") {
+  function addTextField(text = "텍스트를 입력하세요") {
     const id = genID();
     fetchFont(currentFont);
     const object = {
@@ -155,7 +155,7 @@
       lineHeight: 1.4,
       fontFamily: currentFont,
       x: 0,
-      y: 0
+      y: 0,
     };
     allObjects = allObjects.map((objects, pIndex) =>
       pIndex === selectedPageIndex ? [...objects, object] : objects
@@ -259,15 +259,15 @@
         class="flex items-center justify-center h-full w-8 hover:bg-gray-500 cursor-pointer"
         class:cursor-not-allowed={selectedPageIndex < 0}
         class:bg-gray-500={selectedPageIndex < 0}
-        on:click={onAddSquareBox}>
-        <img src="square-box.svg" alt="사각 마스킹 추가" title="사각 마스킹 이미지 추가" />
+        on:click={onAddBlackSquareBox}>
+        <img src="square-box.svg" alt="검정 사각 마스킹 추가" title="검정 사각 마스킹 추가" />
       </label>
       <label
         class="flex items-center justify-center h-full w-8 hover:bg-gray-500 cursor-pointer"
         class:cursor-not-allowed={selectedPageIndex < 0}
         class:bg-gray-500={selectedPageIndex < 0}
-        on:click={onAddCircleBox}>
-        <img src="circle-box.svg" alt="원형 마스킹 추가" title="원형 마스킹 이미지 추가" />
+        on:click={onAddWhiteSquareBox}>
+        <img src="square-box2.svg" alt="흰색 사각 마스킹 추가" title="흰색 사각 마스킹 추가" />
       </label>
 
       <label
@@ -384,7 +384,7 @@
                     size={object.size}
                     lineHeight={object.lineHeight}
                     fontFamily={object.fontFamily}
-                    pageScale={pagesScale[pIndex]} />
+                    pageScale={pagesScale[pIndex]}/>
                 {:else if object.type === 'drawing'}
                   <Drawing
                     on:update={e => updateObject(object.id, e.detail)}
