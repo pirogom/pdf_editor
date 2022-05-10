@@ -22,11 +22,13 @@
   let pages = [];
   let pagesScale = [];
   let allObjects = [];
-  let currentFont = "Times-Roman";
+  let currentFont = "Gulim";
   let focusId = null;
   let selectedPageIndex = -1;
   let saving = false;
   let addingDrawing = false;
+  let squareMasking = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAAXNSR0IArs4c6QAAAC9JREFUWEft0EERAAAMwjDwL3qTwSdV0EuTXIbVAAECBAgQIECAAAECBAgQILAWeLAnIAG6gLhJAAAAAElFTkSuQmCC"
+  let circleMasking = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAAXNSR0IArs4c6QAAA7lJREFUeF7lm0uoTlEUx3+Xq5DnhCQh8iwGFHkUAwa4SCEGhgYGdD0m5iZekWRgKAl5SyF5RCkMkNdF3mSESMRF/9vZ+u7X/r7zPuc7Z6/p2Xs9/nvvtddaZ+0msqERwBxgMjAWGAIMBLoBTcBf4BfwEXgDPAJuAxeB52mqKOFpUBdgJrAJmOcZGVWOwDkHbAWuA3+iMrLNSxoAreweYFGSSlbxOgWsA14lISMpAAYBJ4ApSSgVkMdNYAnwIeB467C4APQCDgEL4igRc+5ZYAXwLQqfOAAsBQ7HPN9RdLbNkZ9YDhwNyzAKAHJwp4H5YYVlMF67Qf4nsKMMC8AA4BnQOwNjoorQUZAz/hyEQRgAZgDXGmTL+9mmHTAVuOU3MCgAa4Hdfswa8PtqYH89vYIAMA240YDGBVVJAZkCqEjX4HAvFA0CVFCFsh6nG0I+4V3YSLA78BVozlrjFOT9BPoBP6p511vZJ8CoFJTJi2UbMDooABuBbXlpmqJcJWfbK/nbdkBPL6ws8rmvhaH8gcL372aAzUhFeS0prkLerM8AC2sBIG/5Om8NM5A/zKTT1TvgLjAhAwXyFnHHq051lKMMjQMe5K1ZhvJHKsapBEBnI8+8PkPbO0Qpc2wxACjF/V2QRCcpoHQjNBsAih7vRwVlugHgmFdfi8qoqPOOGwC0/bsW1YoYercLgMHA2xhMCj1VAKi4eaTQVsRQXgBsATbH4FHoqQKg7LF/3QUSAIr+FAU6SQJAqWEPJ633Ir92QJGgk2T+zTtpvIwWAM7vAOd9wFNAubGTpCNwHpjrpPWeD1CZeIPLAKwEDroMgPPZoBbf6XqAAHC+IuR8TdD5qrCOwQWvn9eVC6HTfwEZrV4A9QS4QuoVaHP13+A9YKLJBitXfCjw0oEtUPPvsGy/DMwqMQhXgNnGPluDhJqJPpUYgP6VXaS12mDKmiDtANT/9J/q9QG9B/QOoCykzhf5uE5UD4A+3lEoQ8FUvcN9bW8K/DrByhIbdNz5tq3sB4Dm6LWXosSikqpden1mpSAAaOIaYG8BEUikW9zYrbvzUkHaaNT+In2v+i1a0B1g+Kh69MJ78OjHO6/veoCpLndrd3iYW6CWAeoi16vO8XlZWEfuQ2CSrSs8rg+wzW+0YGkX0Bp2UcIegWr+aq1VXp1nd6kyO/U36s1xaIoLgBE4xntDmCUQ94FlwOPQVldMSAoAw1Kh5k5gcUq/3BXRnQTWN9rbYdsiaFcofljlhaFRF+oLcADYB8jJJUr/AI4ai/zkj+trAAAAAElFTkSuQmCC"
   // for test purpose
   onMount(async () => {
     try {
@@ -105,6 +107,37 @@
       console.log(`Fail to add image.`, e);
     }
   }
+  async function addUrlImage(dataUrl, file) {
+    try {
+      // get dataURL to prevent canvas from tainted
+      const img = await readAsImage(dataUrl);
+      const id = genID();
+      const { width, height } = img;
+      const object = {
+        id,
+        type: "image",
+        width,
+        height,
+        x: 0,
+        y: 0,
+        payload: img,
+        file
+      };
+      allObjects = allObjects.map((objects, pIndex) =>
+        pIndex === selectedPageIndex ? [...objects, object] : objects
+      );
+    } catch (e) {
+      console.log(`Fail to add image.`, e);
+    }
+  }
+
+  function onAddSquareBox(){
+    addUrlImage(squareMasking, "squre.png")
+  }
+  function onAddCircleBox(){
+    addUrlImage(circleMasking, "circle.png")
+  }
+
   function onAddTextField() {
     if (selectedPageIndex >= 0) {
       addTextField();
@@ -216,18 +249,34 @@
       class="whitespace-no-wrap bg-blue-500 hover:bg-blue-700 text-white
       font-bold py-1 px-3 md:px-4 rounded mr-3 cursor-pointer md:mr-4"
       for="pdf">
-      Choose PDF
+      PDF 열기
     </label>
     <div
       class="relative mr-3 flex h-8 bg-gray-400 rounded-sm overflow-hidden
       md:mr-4">
+
+      <label
+        class="flex items-center justify-center h-full w-8 hover:bg-gray-500 cursor-pointer"
+        class:cursor-not-allowed={selectedPageIndex < 0}
+        class:bg-gray-500={selectedPageIndex < 0}
+        on:click={onAddSquareBox}>
+        <img src="square-box.svg" alt="사각 마스킹 추가" title="사각 마스킹 이미지 추가" />
+      </label>
+      <label
+        class="flex items-center justify-center h-full w-8 hover:bg-gray-500 cursor-pointer"
+        class:cursor-not-allowed={selectedPageIndex < 0}
+        class:bg-gray-500={selectedPageIndex < 0}
+        on:click={onAddCircleBox}>
+        <img src="circle-box.svg" alt="원형 마스킹 추가" title="원형 마스킹 이미지 추가" />
+      </label>
+
       <label
         class="flex items-center justify-center h-full w-8 hover:bg-gray-500
         cursor-pointer"
         for="image"
         class:cursor-not-allowed={selectedPageIndex < 0}
         class:bg-gray-500={selectedPageIndex < 0}>
-        <img src="image.svg" alt="An icon for adding images" />
+        <img src="image.svg" alt="이미지 추가" title="이미지 추가" />
       </label>
       <label
         class="flex items-center justify-center h-full w-8 hover:bg-gray-500
@@ -236,7 +285,7 @@
         class:cursor-not-allowed={selectedPageIndex < 0}
         class:bg-gray-500={selectedPageIndex < 0}
         on:click={onAddTextField}>
-        <img src="notes.svg" alt="An icon for adding text" />
+        <img src="notes.svg" alt="텍스트 추가" title="텍스트 추가" />
       </label>
       <label
         class="flex items-center justify-center h-full w-8 hover:bg-gray-500
@@ -244,13 +293,13 @@
         on:click={onAddDrawing}
         class:cursor-not-allowed={selectedPageIndex < 0}
         class:bg-gray-500={selectedPageIndex < 0}>
-        <img src="gesture.svg" alt="An icon for adding drawing" />
+        <img src="gesture.svg" alt="사인 추가" title="사인 추가" />
       </label>
     </div>
     <div class="justify-center mr-3 md:mr-4 w-full max-w-xs hidden md:flex">
-      <img src="/edit.svg" class="mr-2" alt="a pen, edit pdf name" />
+      <img src="/edit.svg" class="mr-2" alt="PDF 파일명 변경" title="PDF 파일명 변경" />
       <input
-        placeholder="Rename your PDF here"
+        placeholder="저장할 파일명"
         type="text"
         class="flex-grow bg-transparent"
         bind:value={pdfName} />
@@ -261,9 +310,9 @@
       md:px-4 mr-3 md:mr-4 rounded"
       class:cursor-not-allowed={pages.length === 0 || saving || !pdfFile}
       class:bg-blue-700={pages.length === 0 || saving || !pdfFile}>
-      {saving ? 'Saving' : 'Save'}
+      {saving ? '저장중' : '저장'}
     </button>
-    <a href="https://github.com/ShizukuIchi/pdf-editor">
+    <a href="https://github.com/pirogom/pdf_editor" target="_blank">
       <img
         src="/GitHub-Mark-32px.png"
         alt="A GitHub icon leads to personal GitHub page" />

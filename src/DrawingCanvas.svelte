@@ -71,13 +71,13 @@
       on:click={cancel}
       class=" w-24 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-4
       rounded mr-4">
-      Cancel
+      취소
     </button>
     <button
       on:click={finish}
       class="w-24 bg-blue-600 hover:bg-blue-700 text-white font-bold py-1 px-4
       rounded">
-      Done
+      완료
     </button>
   </div>
   <svg class="w-full h-full pointer-events-none">
